@@ -1,10 +1,23 @@
 ---
 - name: "Apache installation using docker"
   hosts: prod
+  become: yes
   pre_tasks:
   - name: "Install docker python"
     pip: name=docker-py
+  - name: "Install some package"
+    apt:
+      name: "{{ item }}"
+      update_cache: yes
+    loop:
+      - git
+      - wget
+    when: ansible_facts['os_family'] == "Debian"
   tasks:
+  - name: "Copy website file template"
+    template: 
+      src: index.html.j2
+      dest: /home/cedric/index.html
   - name: "Launch docker container"
     docker_container:
       name: "webapp"
@@ -12,3 +25,5 @@
       state: started
       ports:
         - "8080:80"
+      volumes:
+        - /home/cedric/index.html:/usr/local/apache2/htdocs/index.html
