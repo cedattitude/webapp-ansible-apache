@@ -26,6 +26,6 @@
       image: "httpd"
       state: started
       ports:
-        - "8080:80"
+        - "8090:80"
       volumes:
         - /home/cedric/index.html:/usr/local/apache2/htdocs/index.html
